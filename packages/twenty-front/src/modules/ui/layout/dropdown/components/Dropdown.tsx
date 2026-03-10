@@ -15,7 +15,6 @@ import { type DropdownOffset } from '@/ui/layout/dropdown/types/DropdownOffset';
 import { type GlobalHotkeysConfig } from '@/ui/utilities/hotkey/types/GlobalHotkeysConfig';
 import { useAtomComponentStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomComponentStateValue';
 import { useSetAtomComponentState } from '@/ui/utilities/state/jotai/hooks/useSetAtomComponentState';
-import { styled } from '@linaria/react';
 import {
   type Placement,
   autoUpdate,
@@ -24,6 +23,7 @@ import {
   size,
   useFloating,
 } from '@floating-ui/react';
+import { styled } from '@linaria/react';
 import { type MouseEvent, type ReactNode, useCallback } from 'react';
 import { flushSync } from 'react-dom';
 import { type Keys } from 'react-hotkeys-hook';
@@ -39,14 +39,17 @@ const StyledDropdownFallbackAnchor = styled.div`
 
 const StyledClickableComponent = styled.div<{
   width?: Width;
+  fullHeight?: boolean;
 }>`
-  height: fit-content;
+  display: flex;
+  height: ${({ fullHeight }) => (fullHeight ? '100%' : 'fit-content')};
   width: ${({ width }) => width ?? 'auto'};
 `;
 
 export type DropdownProps = {
   clickableComponent?: ReactNode;
   clickableComponentWidth?: Width;
+  fullHeight?: boolean;
   dropdownComponents: ReactNode;
   hotkey?: {
     key: Keys;
@@ -83,6 +86,7 @@ export const Dropdown = ({
   onClose,
   onOpen,
   clickableComponentWidth = 'auto',
+  fullHeight,
   excludedClickOutsideIds,
   isDropdownInModal = false,
   disableClickForClickableComponent = false,
@@ -204,6 +208,7 @@ export const Dropdown = ({
           aria-haspopup={true}
           role="button"
           width={clickableComponentWidth}
+          fullHeight={fullHeight}
         >
           {clickableComponent}
         </StyledClickableComponent>
